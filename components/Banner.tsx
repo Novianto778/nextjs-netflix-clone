@@ -4,6 +4,7 @@ import { baseUrl } from '../constants/movie';
 import { Movie } from '../typing';
 import { FaPlay } from 'react-icons/fa';
 import Image from 'next/image';
+import { useModalStore } from '../store/modal';
 
 interface Props {
   netflixOriginals: Movie[];
@@ -11,6 +12,7 @@ interface Props {
 
 function Banner({ netflixOriginals }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null);
+  const { openModal, setCurrentMovie } = useModalStore((state) => state);
 
   useEffect(() => {
     setMovie(
@@ -25,6 +27,7 @@ function Banner({ netflixOriginals }: Props) {
           layout="fill"
           src={`${baseUrl}${movie?.backdrop_path || movie?.poster_path}`}
           objectFit="cover"
+          priority={true}
         />
       </div>
 
@@ -40,7 +43,13 @@ function Banner({ netflixOriginals }: Props) {
           Play
         </button>
 
-        <button className="bannerButton bg-[gray]/70">
+        <button
+          className="bannerButton bg-[gray]/70"
+          onClick={() => {
+            setCurrentMovie(movie);
+            openModal();
+          }}
+        >
           <InformationCircleIcon className="h-5 w-5 md:h-8 md:w-8" /> More Info
         </button>
       </div>

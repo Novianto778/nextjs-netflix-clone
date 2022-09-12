@@ -2,7 +2,10 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Banner from '../components/Banner';
 import Header from '../components/Header';
+import Modal from '../components/Modal';
 import Row from '../components/Row';
+import useAuth from '../hooks/useAuth';
+import { useModalStore } from '../store/modal';
 import { Movie } from '../typing';
 import requests from '../utils/request';
 
@@ -27,6 +30,10 @@ const Home: NextPage<Props> = ({
   topRated,
   trendingNow,
 }) => {
+  const { logout, loading } = useAuth();
+  const { modal, openModal } = useModalStore((state) => state);
+
+  if (loading) return <div>Loading...</div>;
   return (
     <div className="relative h-screen bg-gradient-to-b lg:h-[140vh]">
       <Head>
@@ -50,6 +57,7 @@ const Home: NextPage<Props> = ({
           <Row title="Documentaries" movies={documentaries} />
         </section>
       </main>
+      {modal && <Modal />}
     </div>
   );
 };
